@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
 
+<head>
+  <meta charset="UTF-8">
+  <title>انبارگردان</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#0d6efd">
+
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- کتابخانه های لوکال -->
+  <script src="./libs/html5-qrcode.min.js"></script>
+  <script src="./libs/xlsx.full.min.js"></script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 10px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    input,
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .result-item {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+    }
+
+    .result-item:hover {
+      background: #eee;
+    }
+
+    .unit {
+      margin-bottom: 8px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    #reader {
+      width: 100%;
+    }
+
+    .actions button {
+      width: auto;
+      margin: 2px;
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <input type="file" id="excelInput" accept=".xlsx">
+  </div>
+
+  <div class="card">
+    <button onclick="startScan()">📷 شروع اسکن QR</button>
+    <div id="reader"></div>
+  </div>
+
+  <div class="card">
+    <input id="searchInput" placeholder="کد یا نام کالا">
+    <div id="searchResults" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <div class="unit" id="unitText">واحد: -</div>
+
+    <input id="itemCode" placeholder="کد کالا" readonly>
+
+    <input id="itemName" placeholder="نام کالا" readonly>
+
+    <input id="itemGroup" placeholder="گروه کالا" readonly>
+
+    <input id="qty" type="number" placeholder="مقدار شمارش">
+
+    <button onclick="saveCount()">💾 ثبت شمارش</button>
+  </div>
+
+  <div class="card">
+    <button onclick="exportExcel()">📤 خروجی اکسل</button>
+  </div>
+
+  <div class="card">
+    <h3>لیست شمارش</h3>
+
+    <table id="list"></table>
+  </div>
+
+  <script src="./app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => {
+          console.log('SW Registered');
+        });
+    }
+  </script>
+
+</body>
+
+</html>
